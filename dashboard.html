@@ -1,0 +1,2621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="User dashboard and administration panel">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<div class="dashboard">
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="sidebar">
+        <div class="brand">
+            <img src="logo.png" alt="Logo">
+            <h2>Dashboard</h2>
+        </div>
+
+        <button class="nav-btn active" data-section="homeSection">🏠 Home</button>
+        <button class="nav-btn" data-section="profileSection">👤 Profile</button>
+        <button class="nav-btn" data-section="settingsSection">⚙️ Settings</button>
+        <button class="nav-btn" id="activityNav" data-section="activitySection">📋 Activity</button>
+        <button class="nav-btn" id="adminNav" data-section="adminSection" style="display:none;">🛠️ Admin</button>
+
+        <button id="logoutBtn">🚪 Logout</button>
+    </aside>
+
+    <!-- ================= MAIN ================= -->
+    <main class="main-content">
+
+        <div class="topbar">
+            <div>
+                <h1 id="pageTitle">Dashboard</h1>
+                <p id="welcomeText"></p>
+            </div>
+        </div>
+
+        <!-- ================= HOME ================= -->
+        <section id="homeSection" class="section active">
+            <div class="stats">
+                <div class="stat-card">
+                    <h3>Name</h3>
+                    <strong id="homeName">-</strong>
+                </div>
+                <div class="stat-card">
+                    <h3>Username</h3>
+                    <strong id="homeUsername">-</strong>
+                </div>
+                <div class="stat-card">
+                    <h3>Account Type</h3>
+                    <strong id="homeRole">-</strong>
+                </div>
+                <div class="stat-card">
+                    <h3>Status</h3>
+                    <strong id="homeStatus">-</strong>
+                </div>
+            </div>
+
+            <div class="account-overview-card">
+                <div class="account-overview-heading">
+                    <div class="overview-avatar" id="homeAvatar">👤</div>
+                    <div>
+                        <span class="overview-kicker">ACCOUNT OVERVIEW</span>
+                        <h2 id="homeDisplayName">Your Account</h2>
+                        <p id="homeDisplayUsername">@username</p>
+                    </div>
+                </div>
+                <div class="account-badges">
+                    <span class="account-badge" id="homeRoleBadge">User</span>
+                    <span class="account-badge status-badge" id="homeStatusBadge">Active</span>
+                </div>
+                <div class="account-details-grid">
+                    <div><span>Email</span><strong id="homeEmail">-</strong></div>
+                    <div><span>Country</span><strong id="homeCountry">-</strong></div>
+                    <div><span>Phone</span><strong id="homePhone">-</strong></div>
+                    <div><span>Joined</span><strong id="homeJoined">-</strong></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Welcome</h2>
+                <p>
+                    Welcome to your dashboard. You can manage your profile,
+                    account settings and activity here.
+                </p>
+            </div>
+        </section>
+
+        <!-- ================= PROFILE ================= -->
+        <section id="profileSection" class="section">
+
+            <div class="card">
+                <h2>Profile</h2>
+
+                <div class="profile-picture-container">
+                    <img id="profilePicture" class="profile-picture" src="" alt="Profile Picture">
+
+                    <label for="profileImageInput" class="btn btn-small">
+                        Change Picture
+                    </label>
+
+                    <input
+                        type="file"
+                        id="profileImageInput"
+                        class="profile-upload"
+                        accept="image/*"
+                        hidden
+                    >
+                </div>
+
+                <form id="profileForm">
+
+                    <div class="form-group">
+                        <label for="profileName">Full Name</label>
+                        <input id="profileName" autocomplete="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="profileUsername">Username</label>
+                        <input id="profileUsername" autocomplete="username" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="profileEmail">Email</label>
+                        <input type="email" id="profileEmail" autocomplete="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="profilePhone">Phone Number</label>
+                        <input type="tel" id="profilePhone" autocomplete="tel">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="profileAge">Age</label>
+                        <input type="number" id="profileAge" min="1" max="120">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="profileDob">Date of Birth</label>
+                        <input type="date" id="profileDob">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="profileGender">Gender</label>
+                        <select id="profileGender">
+                            <option value="">Prefer not to say</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="profileCountry">Country</label>
+                        <input id="profileCountry" list="countrySuggestions" autocomplete="country-name">
+                    </div>
+
+                    <button class="btn" type="submit">Save Profile Changes</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>Change Password</h2>
+
+                <form id="passwordForm">
+                    <div class="form-group">
+                        <label for="currentPassword">Current Password</label>
+                        <div class="password-wrapper">
+                            <input
+                                type="password"
+                                id="currentPassword"
+                                autocomplete="current-password"
+                                required
+                            >
+                            <button type="button" class="password-toggle"
+                                    onclick="togglePassword('currentPassword', this)"
+                                    aria-label="Show password">👁</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="newPassword">New Password</label>
+                        <div class="password-wrapper">
+                            <input
+                                type="password"
+                                id="newPassword"
+                                autocomplete="new-password"
+                                minlength="6"
+                                required
+                            >
+                            <button type="button" class="password-toggle"
+                                    onclick="togglePassword('newPassword', this)"
+                                    aria-label="Show password">👁</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmNewPassword">Confirm New Password</label>
+                        <div class="password-wrapper">
+                            <input
+                                type="password"
+                                id="confirmNewPassword"
+                                autocomplete="new-password"
+                                minlength="6"
+                                required
+                            >
+                            <button type="button" class="password-toggle"
+                                    onclick="togglePassword('confirmNewPassword', this)"
+                                    aria-label="Show password">👁</button>
+                        </div>
+                    </div>
+
+                    <button class="btn" type="submit">Save Password</button>
+                </form>
+            </div>
+
+        </section>
+
+        <!-- ================= SETTINGS ================= -->
+        <section id="settingsSection" class="section">
+
+            <div class="card">
+                <h2>Account Information</h2>
+
+                <form id="settingsAccountForm">
+                    <div class="settings-grid">
+
+                        <div class="form-group">
+                            <label for="settingsName">Full Name</label>
+                            <input id="settingsName" autocomplete="name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="settingsUsername">Username</label>
+                            <input id="settingsUsername" autocomplete="username" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="settingsEmail">Email Address</label>
+                            <input type="email" id="settingsEmail" autocomplete="email" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="settingsPhone">Phone Number</label>
+                            <input type="tel" id="settingsPhone" autocomplete="tel">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="settingsAge">Age</label>
+                            <input type="number" id="settingsAge" min="1" max="120">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="settingsDob">Date of Birth</label>
+                            <input type="date" id="settingsDob">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="settingsGender">Gender</label>
+                            <select id="settingsGender">
+                                <option value="">Prefer not to say</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="settingsCountry">Country</label>
+                            <input id="settingsCountry" list="countrySuggestions" autocomplete="country-name">
+                        </div>
+
+                    </div>
+
+                    <button class="btn" type="submit">Save Account Information</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>Notifications & Privacy</h2>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="notifications">
+                        Receive account notifications
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="keepActivity">
+                        Keep account activity history
+                    </label>
+                </div>
+
+                <button class="btn" type="button" id="savePreferencesBtn">
+                    Save Preferences
+                </button>
+            </div>
+
+            <div class="card">
+                <h2>Display Settings</h2>
+
+                <div class="settings-grid">
+                    <div class="form-group">
+                        <label for="language">Language</label>
+                        <select id="language">
+                            <option value="English">English</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dashboardView">Dashboard View</label>
+                        <select id="dashboardView">
+                            <option value="comfortable">Comfortable</option>
+                            <option value="compact">Compact</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn" type="button" id="saveDisplayBtn">
+                    Save Display Settings
+                </button>
+            </div>
+
+            <div class="card">
+                <h2>Change Password</h2>
+
+                <form id="settingsPasswordForm">
+                    <div class="form-group">
+                        <label for="settingsCurrentPassword">Current Password</label>
+                        <div class="password-wrapper">
+                            <input
+                                type="password"
+                                id="settingsCurrentPassword"
+                                autocomplete="current-password"
+                                required
+                            >
+                            <button type="button" class="password-toggle"
+                                    onclick="togglePassword('settingsCurrentPassword', this)">👁</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="settingsNewPassword">New Password</label>
+                        <div class="password-wrapper">
+                            <input
+                                type="password"
+                                id="settingsNewPassword"
+                                autocomplete="new-password"
+                                minlength="6"
+                                required
+                            >
+                            <button type="button" class="password-toggle"
+                                    onclick="togglePassword('settingsNewPassword', this)">👁</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="settingsConfirmPassword">Confirm New Password</label>
+                        <div class="password-wrapper">
+                            <input
+                                type="password"
+                                id="settingsConfirmPassword"
+                                autocomplete="new-password"
+                                minlength="6"
+                                required
+                            >
+                            <button type="button" class="password-toggle"
+                                    onclick="togglePassword('settingsConfirmPassword', this)">👁</button>
+                        </div>
+                    </div>
+
+                    <button class="btn" type="submit">Save New Password</button>
+                </form>
+            </div>
+
+        </section>
+
+        <!-- ================= ACTIVITY ================= -->
+        <section id="activitySection" class="section">
+            <div class="card">
+                <h2 id="activityTitle">My Activity</h2>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Action</th>
+                                <th>Target</th>
+                                <th>Account</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activityTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= ADMIN ================= -->
+        <section id="adminSection" class="section">
+
+            <div class="stats">
+                <div class="stat-card">
+                    <h3>Total Users</h3>
+                    <strong id="totalUsers">0</strong>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Active Users</h3>
+                    <strong id="activeUsers">0</strong>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Deactivated</h3>
+                    <strong id="disabledUsers">0</strong>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Activities</h3>
+                    <strong id="activityCount">0</strong>
+                </div>
+            </div>
+
+            <!-- USER MANAGEMENT: ALL 8 REQUESTED FEATURES -->
+            <div class="card">
+                <h2>User Management</h2>
+
+                <div class="admin-toolbar">
+                    <input
+                        type="search"
+                        id="userSearch"
+                        placeholder="Search users by name, username, email, phone or country..."
+                    >
+
+                    <button class="btn btn-small admin-only-control" id="addUserBtn" type="button">Add User</button>
+
+                    <button class="btn btn-small admin-only-control" id="exportUsersBtn" type="button">
+                        Export Users
+                    </button>
+
+                    <label class="btn btn-small import-label admin-only-control">
+                        Import Users
+                        <input
+                            type="file"
+                            id="importUsersInput"
+                            accept=".csv,text/csv"
+                            hidden
+                        >
+                    </label>
+                </div>
+
+                <p class="small-text">
+                    Import CSV columns:
+                    name, username, email, phone, age, dob, gender, country, password, status.
+                    Imported accounts are always normal users.
+                </p>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Type</th>
+                                <th>Age</th>
+                                <th>Status</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ADMIN PROFILE IS INSIDE THE SAME ADMIN SECTION -->
+            <div class="card">
+                <h2>Admin Profile</h2>
+
+                <form id="adminProfileForm">
+                    <div class="settings-grid">
+
+                        <div class="form-group">
+                            <label for="adminName">Full Name</label>
+                            <input id="adminName" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="adminUsername">Username</label>
+                            <input id="adminUsername" autocomplete="username" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="adminEmail">Email</label>
+                            <input type="email" id="adminEmail" autocomplete="email" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="adminPhone">Phone Number</label>
+                            <input type="tel" id="adminPhone">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="adminAge">Age</label>
+                            <input type="number" id="adminAge" min="1" max="120">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="adminDob">Date of Birth</label>
+                            <input type="date" id="adminDob">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="adminGender">Gender</label>
+                            <select id="adminGender">
+                                <option value="">Prefer not to say</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="adminCountry">Country</label>
+                            <input id="adminCountry" list="countrySuggestions">
+                        </div>
+
+                    </div>
+
+                    <button class="btn" type="submit">Save Admin Changes</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>Admin Password</h2>
+
+                <form id="adminPasswordForm">
+                    <div class="form-group">
+                        <label for="adminCurrentPassword">Current Password</label>
+                        <div class="password-wrapper">
+                            <input
+                                type="password"
+                                id="adminCurrentPassword"
+                                autocomplete="current-password"
+                                required
+                            >
+                            <button type="button" class="password-toggle"
+                                    onclick="togglePassword('adminCurrentPassword', this)">👁</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="adminNewPassword">New Password</label>
+                        <div class="password-wrapper">
+                            <input
+                                type="password"
+                                id="adminNewPassword"
+                                autocomplete="new-password"
+                                minlength="6"
+                                required
+                            >
+                            <button type="button" class="password-toggle"
+                                    onclick="togglePassword('adminNewPassword', this)">👁</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="adminConfirmPassword">Confirm Password</label>
+                        <div class="password-wrapper">
+                            <input
+                                type="password"
+                                id="adminConfirmPassword"
+                                autocomplete="new-password"
+                                minlength="6"
+                                required
+                            >
+                            <button type="button" class="password-toggle"
+                                    onclick="togglePassword('adminConfirmPassword', this)">👁</button>
+                        </div>
+                    </div>
+
+                    <button class="btn" type="submit">Save Admin Password</button>
+                </form>
+            </div>
+
+            <!-- SYSTEM ACTIVITY -->
+            <div class="card">
+                <h2>System Activity</h2>
+
+                <div class="admin-toolbar">
+                    <input type="search" id="activitySearch" placeholder="Search system activity...">
+                </div>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Account</th>
+                                <th>Role</th>
+                                <th>Action</th>
+                                <th>Target</th>
+                            </tr>
+                        </thead>
+                        <tbody id="systemActivityTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+    </main>
+</div>
+
+
+<!-- ================= ADD USER MODAL ================= -->
+<div class="modal" id="addUserModal" aria-hidden="true">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Add User</h2>
+            <button class="close-modal" id="closeAddUserModal" type="button">×</button>
+        </div>
+
+        <form id="addUserForm">
+            <div class="settings-grid">
+                <div class="form-group"><label for="addName">Name</label><input id="addName" required></div>
+                <div class="form-group"><label for="addUsername">Username</label><input id="addUsername" required autocomplete="username"></div>
+                <div class="form-group"><label for="addEmail">Email</label><input id="addEmail" type="email" required autocomplete="email"></div>
+                <div class="form-group"><label for="addPhone">Phone</label><input id="addPhone" type="tel"></div>
+                <div class="form-group"><label for="addAge">Age</label><input id="addAge" type="number" min="1" max="120"></div>
+                <div class="form-group"><label for="addDob">Date of Birth</label><input id="addDob" type="date"></div>
+                <div class="form-group">
+                    <label for="addGender">Gender</label>
+                    <select id="addGender">
+                        <option value="">Prefer not to say</option>
+                        <option value="Male">Male</option><option value="Female">Female</option><option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="addCountry">Country</label>
+                    <input id="addCountry" list="countrySuggestions" autocomplete="country-name" placeholder="Search or select your country">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="addPassword">Password</label>
+                <div class="password-wrapper">
+                    <input id="addPassword" type="password" minlength="6" required placeholder="Enter password">
+                    <button type="button" class="password-toggle password-eye-inside" onclick="togglePassword('addPassword', this)" aria-label="Show password">👁</button>
+                </div>
+            </div>
+
+            <button class="btn" type="submit">Create User</button>
+        </form>
+    </div>
+</div>
+
+<!-- ================= EDIT USER MODAL ================= -->
+<div class="modal" id="editUserModal" aria-hidden="true">
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <h2>Edit User</h2>
+            <button class="close-modal" id="closeEditModal" type="button">×</button>
+        </div>
+
+        <form id="editUserForm">
+            <input type="hidden" id="editUserId">
+
+            <div class="settings-grid">
+
+                <div class="form-group">
+                    <label for="editName">Name</label>
+                    <input id="editName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editUsername">Username</label>
+                    <input id="editUsername" autocomplete="username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editEmail">Email</label>
+                    <input type="email" id="editEmail" autocomplete="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editPhone">Phone</label>
+                    <input id="editPhone">
+                </div>
+
+                <div class="form-group">
+                    <label for="editAge">Age</label>
+                    <input type="number" id="editAge" min="1" max="120">
+                </div>
+
+                <div class="form-group">
+                    <label for="editDob">Date of Birth</label>
+                    <input type="date" id="editDob">
+                </div>
+
+                <div class="form-group">
+                    <label for="editGender">Gender</label>
+                    <select id="editGender">
+                        <option value="">Prefer not to say</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="editCountry">Country</label>
+                    <input id="editCountry" list="countrySuggestions">
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <label for="editPassword">New Password</label>
+                <div class="password-wrapper">
+                    <input
+                        type="password"
+                        id="editPassword"
+                        autocomplete="new-password"
+                        placeholder="Leave blank to keep the current password"
+                    >
+                    <button type="button" class="password-toggle"
+                            onclick="togglePassword('editPassword', this)">👁</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="editNotifications">
+                    Receive notifications
+                </label>
+            </div>
+
+            <button class="btn" type="submit">Save User Changes</button>
+        </form>
+    </div>
+</div>
+
+<script>
+const API_BASE = window.location.protocol === "file:" ? "http://localhost:3000/api" : "/api";
+
+"use strict";
+
+/* =========================================================
+   STORAGE
+========================================================= */
+const USERS_KEY = "app_users_v2";
+const ADMIN_KEY = "app_admin_v2";
+const SESSION_KEY = "app_session_v2";
+const ACTIVITY_KEY = "app_activity_v2";
+const SETTINGS_KEY = "app_settings_v2";
+
+
+function generateId() {
+    return "id_" + Date.now() + "_" +
+        Math.random().toString(36).slice(2, 9);
+}
+
+function readJSON(key, fallback) {
+    try {
+        const value = JSON.parse(localStorage.getItem(key));
+        return value ?? fallback;
+    } catch {
+        return fallback;
+    }
+}
+
+function writeJSON(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
+}
+
+function getUsers() {
+    let users = readJSON(USERS_KEY, []);
+    if (!Array.isArray(users)) users = [];
+
+    let changed = false;
+
+    users = users.map((user, index) => {
+        if (!user || typeof user !== "object") {
+            changed = true;
+            return null;
+        }
+
+        if (!user.id) {
+            user.id = "user_" + Date.now() + "_" + index;
+            changed = true;
+        }
+
+        /* Admin accounts are never stored in the normal user list. */
+        if (user.role !== "user") {
+            user.role = "user";
+            changed = true;
+        }
+
+        if (typeof user.disabled !== "boolean") {
+            user.disabled = false;
+            changed = true;
+        }
+
+        if (typeof user.notifications !== "boolean") {
+            user.notifications = true;
+            changed = true;
+        }
+
+        if (typeof user.keepActivity !== "boolean") {
+            user.keepActivity = true;
+            changed = true;
+        }
+
+        if (!user.createdAt) {
+            user.createdAt = new Date().toISOString();
+            changed = true;
+        }
+
+        return user;
+    }).filter(Boolean);
+
+    if (changed) saveUsers(users);
+    return users;
+}
+
+function saveUsers(users) {
+    writeJSON(USERS_KEY, users);
+    if (typeof pushUsersToServer === "function") pushUsersToServer(users);
+}
+
+function getAdmin() {
+    let admin = readJSON(ADMIN_KEY, null);
+
+    if (!admin || typeof admin !== "object") {
+        admin = {
+            id: "admin",
+            role: "admin",
+            name: "Administrator",
+            username: "admin",
+            email: "admin@mywebsite.com",
+            password: "Admin12345",
+            phone: "",
+            age: "",
+            dob: "",
+            gender: "",
+            country: "",
+            disabled: false,
+            notifications: true,
+            keepActivity: true,
+            profilePicture: "",
+            createdAt: new Date().toISOString()
+        };
+
+        saveAdmin(admin);
+    }
+
+    admin.id = "admin";
+    admin.role = "admin";
+    if (typeof admin.disabled !== "boolean") admin.disabled = false;
+    if (typeof admin.notifications !== "boolean") admin.notifications = true;
+    if (typeof admin.keepActivity !== "boolean") admin.keepActivity = true;
+
+    saveAdmin(admin);
+    return admin;
+}
+
+function saveAdmin(admin) {
+    writeJSON(ADMIN_KEY, admin);
+    if (typeof pushAdminToServer === "function") pushAdminToServer(admin);
+}
+
+function getSession() {
+    let session = readJSON(SESSION_KEY, null);
+
+    /* Compatibility with older versions of the project. */
+    if (!session && localStorage.getItem("loggedIn") === "true") {
+        const oldRole = localStorage.getItem("currentUserRole") || "user";
+        session = {
+            loggedIn: true,
+            id: oldRole === "admin"
+                ? "admin"
+                : localStorage.getItem("currentUserId"),
+            role: oldRole
+        };
+
+        writeJSON(SESSION_KEY, session);
+    }
+
+    return session;
+}
+
+/* =========================================================
+   ACTIVITY
+========================================================= */
+function addActivity(action, target = "", actor = null) {
+    if (actor && actor.keepActivity === false) {
+        return;
+    }
+
+    let activities = readJSON(ACTIVITY_KEY, []);
+    if (!Array.isArray(activities)) activities = [];
+
+    activities.unshift({
+        id: generateId(),
+        action: String(action),
+        target: String(target || ""),
+        actorId: actor?.id || "guest",
+        actorRole: actor?.role || "guest",
+        actorName: actor?.username || actor?.name || "Guest",
+        date: new Date().toISOString()
+    });
+
+    writeJSON(ACTIVITY_KEY, activities.slice(0, 1000));
+}
+
+/* =========================================================
+   CURRENT ACCOUNT
+========================================================= */
+const session = getSession();
+let currentUser = null;
+
+function loadCurrentUser() {
+    if (session.role === "admin") {
+        const admin = getAdmin();
+
+        if (admin.id !== "admin" || admin.disabled) {
+            clearSessionAndRedirect();
+            return null;
+        }
+
+        return admin;
+    }
+
+    const users = getUsers();
+    const user = users.find(item => item.id === session.id);
+
+    if (!user || user.disabled) {
+        clearSessionAndRedirect();
+        return null;
+    }
+
+    return user;
+}
+
+function clearSessionAndRedirect() {
+    localStorage.removeItem(SESSION_KEY);
+    localStorage.removeItem("loggedIn");
+    localStorage.removeItem("currentUserId");
+    localStorage.removeItem("currentUserRole");
+    window.location.href = "index.html";
+}
+
+async function initializeCurrentUser() {
+    if (!session || !session.loggedIn || !session.id) {
+        window.location.href = "index.html";
+        return false;
+    }
+
+    /* Resolve the account from the shared server first. This is what makes
+       accounts created on another device available on this device. */
+    try {
+        if (session.role === "admin") {
+            const adminResponse = await fetch(`${API_BASE}/admin`);
+            if (adminResponse.ok) {
+                const adminData = await adminResponse.json();
+                if (adminData.admin) {
+                    localStorage.setItem(ADMIN_KEY, JSON.stringify(adminData.admin));
+                }
+            }
+        } else {
+            const usersResponse = await fetch(`${API_BASE}/users`);
+            if (usersResponse.ok) {
+                const usersData = await usersResponse.json();
+                if (Array.isArray(usersData.users)) {
+                    localStorage.setItem(USERS_KEY, JSON.stringify(usersData.users));
+                }
+            }
+        }
+    } catch (error) {
+        console.warn("Shared account server unavailable; using local account data.", error);
+    }
+
+    currentUser = loadCurrentUser();
+
+    if (!currentUser) {
+        return false;
+    }
+
+    return true;
+}
+
+/* =========================================================
+   GENERAL HELPERS
+========================================================= */
+function escapeHTML(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+function formatDate(value) {
+    if (!value) return "-";
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return "-";
+
+    return date.toLocaleString();
+}
+
+function togglePassword(id, button) {
+    const input = document.getElementById(id);
+    if (!input) return;
+
+    if (input.type === "password") {
+        input.type = "text";
+        button.textContent = "🙈";
+        button.setAttribute("aria-label", "Hide password");
+    } else {
+        input.type = "password";
+        button.textContent = "👁";
+        button.setAttribute("aria-label", "Show password");
+    }
+}
+
+function setMessage(message, type = "success") {
+    alert(message);
+}
+
+function saveCurrentUser() {
+    if (currentUser.role === "admin") {
+        saveAdmin(currentUser);
+        return;
+    }
+
+    const users = getUsers();
+    const index = users.findIndex(user => user.id === currentUser.id);
+
+    if (index !== -1) {
+        users[index] = currentUser;
+        saveUsers(users);
+    }
+}
+
+function usernameExists(username, exceptId = null) {
+    const normalized = String(username || "").trim().toLowerCase();
+
+    if (!normalized) return false;
+
+    const userConflict = getUsers().some(user =>
+        user.id !== exceptId &&
+        String(user.username || "").trim().toLowerCase() === normalized
+    );
+
+    const admin = getAdmin();
+
+    const adminConflict =
+        admin.id !== exceptId &&
+        String(admin.username || "").trim().toLowerCase() === normalized;
+
+    return userConflict || adminConflict;
+}
+
+function emailExists(email, exceptId = null) {
+    const normalized = String(email || "").trim().toLowerCase();
+
+    if (!normalized) return false;
+
+    const userConflict = getUsers().some(user =>
+        user.id !== exceptId &&
+        String(user.email || "").trim().toLowerCase() === normalized
+    );
+
+    const admin = getAdmin();
+
+    const adminConflict =
+        admin.id !== exceptId &&
+        String(admin.email || "").trim().toLowerCase() === normalized;
+
+    return userConflict || adminConflict;
+}
+
+
+function applyAdminPermissions() {
+    const isAdmin = currentUser && currentUser.role === "admin";
+    document.querySelectorAll(".admin-only-control").forEach(element => {
+        element.style.display = isAdmin ? "" : "none";
+    });
+    const adminNav = document.getElementById("adminNav");
+    if (adminNav) adminNav.style.display = isAdmin ? "" : "none";
+}
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+const sectionTitles = {
+    homeSection: "Dashboard",
+    profileSection: "Profile",
+    settingsSection: "Settings",
+    activitySection: "Activity",
+    adminSection: "Admin"
+};
+
+function showSection(sectionId) {
+    if (sectionId === "adminSection" && currentUser.role !== "admin") {
+        return;
+    }
+
+    document.querySelectorAll(".section").forEach(section => {
+        section.classList.remove("active");
+    });
+
+    document.querySelectorAll(".nav-btn").forEach(button => {
+        button.classList.remove("active");
+    });
+
+    const section = document.getElementById(sectionId);
+    if (section) section.classList.add("active");
+
+    const navButton = document.querySelector(
+        `[data-section="${sectionId}"]`
+    );
+
+    if (navButton) navButton.classList.add("active");
+
+    document.getElementById("pageTitle").textContent =
+        sectionTitles[sectionId] || "Dashboard";
+
+    if (sectionId === "activitySection") {
+        renderActivity();
+    }
+
+    if (sectionId === "adminSection") {
+        renderAdmin();
+    }
+}
+
+document.querySelectorAll(".nav-btn").forEach(button => {
+    button.addEventListener("click", () => {
+        showSection(button.dataset.section);
+    });
+});
+
+/* =========================================================
+   LOAD DASHBOARD
+========================================================= */
+function loadDashboard() {
+    document.getElementById("welcomeText").textContent =
+        `Welcome, ${currentUser.name || currentUser.username}!`;
+
+    document.getElementById("homeName").textContent =
+        currentUser.name || currentUser.username || "-";
+
+    document.getElementById("homeUsername").textContent =
+        currentUser.username || "-";
+
+    document.getElementById("homeRole").textContent =
+        currentUser.role === "admin" ? "Administrator" : "Normal User";
+
+    document.getElementById("homeStatus").textContent =
+        currentUser.disabled ? "Deactivated" : "Active";
+
+    const displayName = currentUser.name || currentUser.username || "User";
+    const roleLabel = currentUser.role === "admin" ? "Administrator" : "Normal User";
+    const statusLabel = currentUser.disabled ? "Deactivated" : "Active";
+    document.getElementById("homeDisplayName").textContent = displayName;
+    document.getElementById("homeDisplayUsername").textContent = currentUser.username ? `@${currentUser.username}` : "@username";
+    document.getElementById("homeEmail").textContent = currentUser.email || "-";
+    document.getElementById("homeCountry").textContent = currentUser.country || "Not set";
+    document.getElementById("homePhone").textContent = currentUser.phone || "Not set";
+    document.getElementById("homeJoined").textContent = formatDate(currentUser.createdAt);
+    document.getElementById("homeRoleBadge").textContent = roleLabel;
+    document.getElementById("homeStatusBadge").textContent = statusLabel;
+    document.getElementById("homeStatusBadge").classList.toggle("is-disabled", !!currentUser.disabled);
+    const avatar = document.getElementById("homeAvatar");
+    if (avatar) {
+        if (currentUser.profilePicture) { avatar.innerHTML = `<img src="${escapeHTML(currentUser.profilePicture)}" alt="Profile">`; }
+        else { avatar.textContent = displayName.charAt(0).toUpperCase(); }
+    }
+
+    loadProfile();
+    loadSettings();
+
+    applyAdminPermissions();
+}
+
+/* =========================================================
+   PROFILE
+========================================================= */
+function loadProfile() {
+    document.getElementById("profileName").value =
+        currentUser.name || "";
+
+    document.getElementById("profileUsername").value =
+        currentUser.username || "";
+
+    document.getElementById("profileEmail").value =
+        currentUser.email || "";
+
+    document.getElementById("profilePhone").value =
+        currentUser.phone || "";
+
+    document.getElementById("profileAge").value =
+        currentUser.age || "";
+
+    document.getElementById("profileDob").value =
+        currentUser.dob || "";
+
+    document.getElementById("profileGender").value =
+        currentUser.gender || "";
+
+    document.getElementById("profileCountry").value =
+        currentUser.country || "";
+
+    setProfilePicture(currentUser.profilePicture);
+}
+
+function setProfilePicture(picture) {
+    const image = document.getElementById("profilePicture");
+
+    if (picture) {
+        image.src = picture;
+        return;
+    }
+
+    image.src =
+        "data:image/svg+xml;charset=UTF-8," +
+        encodeURIComponent(`
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="120" height="120" viewBox="0 0 120 120">
+                <rect width="120" height="120" fill="#e5e7eb"/>
+                <circle cx="60" cy="43" r="22" fill="#9ca3af"/>
+                <path d="M22 108c4-25 18-38 38-38s34 13 38 38"
+                      fill="#9ca3af"/>
+            </svg>
+        `);
+}
+
+document.getElementById("profileImageInput")
+    .addEventListener("change", function () {
+        const file = this.files[0];
+
+        if (!file) return;
+
+        if (!file.type.startsWith("image/")) {
+            alert("Please choose an image file.");
+            this.value = "";
+            return;
+        }
+
+        if (file.size > 2 * 1024 * 1024) {
+            alert("Please choose an image smaller than 2MB.");
+            this.value = "";
+            return;
+        }
+
+        const reader = new FileReader();
+
+        reader.onload = event => {
+            currentUser.profilePicture = event.target.result;
+            saveCurrentUser();
+            setProfilePicture(currentUser.profilePicture);
+
+            addActivity(
+                "Changed profile picture",
+                "",
+                currentUser
+            );
+
+            alert("Profile picture saved.");
+        };
+
+        reader.readAsDataURL(file);
+        this.value = "";
+    });
+
+document.getElementById("profileForm")
+    .addEventListener("submit", event => {
+        event.preventDefault();
+
+        const username = document
+            .getElementById("profileUsername")
+            .value.trim();
+
+        const email = document
+            .getElementById("profileEmail")
+            .value.trim()
+            .toLowerCase();
+
+        if (!username || !email) {
+            alert("Username and email are required.");
+            return;
+        }
+
+        if (usernameExists(username, currentUser.id)) {
+            alert("That username is already being used.");
+            return;
+        }
+
+        if (emailExists(email, currentUser.id)) {
+            alert("That email is already being used.");
+            return;
+        }
+
+        currentUser.name =
+            document.getElementById("profileName").value.trim();
+
+        currentUser.username = username;
+        currentUser.email = email;
+
+        currentUser.phone =
+            document.getElementById("profilePhone").value.trim();
+
+        currentUser.age =
+            document.getElementById("profileAge").value;
+
+        currentUser.dob =
+            document.getElementById("profileDob").value;
+
+        currentUser.gender =
+            document.getElementById("profileGender").value;
+
+        currentUser.country =
+            document.getElementById("profileCountry").value.trim();
+
+        saveCurrentUser();
+
+        addActivity("Updated profile", currentUser.username, currentUser);
+
+        loadDashboard();
+
+        alert("Profile changes saved successfully.");
+    });
+
+/* =========================================================
+   PROFILE PASSWORD
+========================================================= */
+document.getElementById("passwordForm")
+    .addEventListener("submit", event => {
+        event.preventDefault();
+
+        const currentPassword =
+            document.getElementById("currentPassword").value;
+
+        const newPassword =
+            document.getElementById("newPassword").value;
+
+        const confirmPassword =
+            document.getElementById("confirmNewPassword").value;
+
+        if (currentPassword !== currentUser.password) {
+            alert("Current password is incorrect.");
+            return;
+        }
+
+        if (newPassword.length < 6) {
+            alert("New password must contain at least 6 characters.");
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            alert("New passwords do not match.");
+            return;
+        }
+
+        currentUser.password = newPassword;
+        saveCurrentUser();
+
+        addActivity("Changed password", "", currentUser);
+
+        event.target.reset();
+
+        alert("Password changed successfully.");
+    });
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+function getSavedSettings() {
+    const allSettings = readJSON(SETTINGS_KEY, {});
+
+    if (!allSettings || typeof allSettings !== "object") {
+        return {};
+    }
+
+    return allSettings[currentUser.id] || {};
+}
+
+function saveSettingsData(settings) {
+    const allSettings = readJSON(SETTINGS_KEY, {});
+
+    allSettings[currentUser.id] = settings;
+
+    writeJSON(SETTINGS_KEY, allSettings);
+}
+
+function loadSettings() {
+    const saved = getSavedSettings();
+
+    document.getElementById("settingsName").value =
+        currentUser.name || "";
+
+    document.getElementById("settingsUsername").value =
+        currentUser.username || "";
+
+    document.getElementById("settingsEmail").value =
+        currentUser.email || "";
+
+    document.getElementById("settingsPhone").value =
+        currentUser.phone || "";
+
+    document.getElementById("settingsAge").value =
+        currentUser.age || "";
+
+    document.getElementById("settingsDob").value =
+        currentUser.dob || "";
+
+    document.getElementById("settingsGender").value =
+        currentUser.gender || "";
+
+    document.getElementById("settingsCountry").value =
+        currentUser.country || "";
+
+    document.getElementById("notifications").checked =
+        currentUser.notifications !== false;
+
+    document.getElementById("keepActivity").checked =
+        currentUser.keepActivity !== false;
+
+    document.getElementById("language").value =
+        saved.language || "English";
+
+    document.getElementById("dashboardView").value =
+        saved.dashboardView || "comfortable";
+
+    applyDashboardView(saved.dashboardView || "comfortable");
+}
+
+function saveAccountInformation() {
+    const username =
+        document.getElementById("settingsUsername").value.trim();
+
+    const email =
+        document.getElementById("settingsEmail").value.trim().toLowerCase();
+
+    if (!username || !email) {
+        alert("Username and email are required.");
+        return;
+    }
+
+    if (usernameExists(username, currentUser.id)) {
+        alert("That username is already being used.");
+        return;
+    }
+
+    if (emailExists(email, currentUser.id)) {
+        alert("That email is already being used.");
+        return;
+    }
+
+    currentUser.name =
+        document.getElementById("settingsName").value.trim();
+
+    currentUser.username = username;
+    currentUser.email = email;
+
+    currentUser.phone =
+        document.getElementById("settingsPhone").value.trim();
+
+    currentUser.age =
+        document.getElementById("settingsAge").value;
+
+    currentUser.dob =
+        document.getElementById("settingsDob").value;
+
+    currentUser.gender =
+        document.getElementById("settingsGender").value;
+
+    currentUser.country =
+        document.getElementById("settingsCountry").value.trim();
+
+    saveCurrentUser();
+
+    addActivity(
+        "Updated account information",
+        currentUser.username,
+        currentUser
+    );
+
+    loadDashboard();
+
+    alert("Account information saved successfully.");
+}
+
+document.getElementById("settingsAccountForm")
+    .addEventListener("submit", event => {
+        event.preventDefault();
+        saveAccountInformation();
+    });
+
+document.getElementById("savePreferencesBtn")
+    .addEventListener("click", () => {
+        currentUser.notifications =
+            document.getElementById("notifications").checked;
+
+        currentUser.keepActivity =
+            document.getElementById("keepActivity").checked;
+
+        saveCurrentUser();
+
+        const saved = getSavedSettings();
+
+        saveSettingsData({
+            ...saved,
+            language:
+                document.getElementById("language").value,
+            dashboardView:
+                document.getElementById("dashboardView").value
+        });
+
+        addActivity("Updated notification preferences", "", currentUser);
+
+        alert("Preferences saved successfully.");
+    });
+
+document.getElementById("saveDisplayBtn")
+    .addEventListener("click", () => {
+        const saved = getSavedSettings();
+
+        const language =
+            document.getElementById("language").value;
+
+        const dashboardView =
+            document.getElementById("dashboardView").value;
+
+        saveSettingsData({
+            ...saved,
+            language,
+            dashboardView
+        });
+
+        applyDashboardView(dashboardView);
+
+        addActivity("Updated display settings", "", currentUser);
+
+        alert("Display settings saved successfully.");
+    });
+
+function applyDashboardView(view) {
+    document.body.classList.toggle(
+        "compact-dashboard",
+        view === "compact"
+    );
+}
+
+document.getElementById("settingsPasswordForm")
+    .addEventListener("submit", event => {
+        event.preventDefault();
+
+        const currentPassword =
+            document.getElementById("settingsCurrentPassword").value;
+
+        const newPassword =
+            document.getElementById("settingsNewPassword").value;
+
+        const confirmPassword =
+            document.getElementById("settingsConfirmPassword").value;
+
+        if (currentPassword !== currentUser.password) {
+            alert("Current password is incorrect.");
+            return;
+        }
+
+        if (newPassword.length < 6) {
+            alert("New password must contain at least 6 characters.");
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            alert("New passwords do not match.");
+            return;
+        }
+
+        currentUser.password = newPassword;
+        saveCurrentUser();
+
+        addActivity("Changed password", "", currentUser);
+
+        event.target.reset();
+
+        alert("New password saved successfully.");
+    });
+
+/* =========================================================
+   ADMIN
+========================================================= */
+function requireAdmin() {
+    return currentUser.role === "admin";
+}
+
+function renderAdmin() {
+    if (!requireAdmin()) return;
+
+    const users = getUsers();
+    const activities = readJSON(ACTIVITY_KEY, []);
+
+    document.getElementById("totalUsers").textContent = users.length;
+
+    document.getElementById("activeUsers").textContent =
+        users.filter(user => !user.disabled).length;
+
+    document.getElementById("disabledUsers").textContent =
+        users.filter(user => user.disabled).length;
+
+    document.getElementById("activityCount").textContent =
+        Array.isArray(activities) ? activities.length : 0;
+
+    loadAdminProfile();
+
+    renderUsersTable();
+    renderSystemActivity();
+}
+
+function loadAdminProfile() {
+    const admin = getAdmin();
+
+    currentUser = admin;
+
+    document.getElementById("adminName").value =
+        admin.name || "";
+
+    document.getElementById("adminUsername").value =
+        admin.username || "";
+
+    document.getElementById("adminEmail").value =
+        admin.email || "";
+
+    document.getElementById("adminPhone").value =
+        admin.phone || "";
+
+    document.getElementById("adminAge").value =
+        admin.age || "";
+
+    document.getElementById("adminDob").value =
+        admin.dob || "";
+
+    document.getElementById("adminGender").value =
+        admin.gender || "";
+
+    document.getElementById("adminCountry").value =
+        admin.country || "";
+}
+
+document.getElementById("userSearch")
+    .addEventListener("input", renderUsersTable);
+
+function renderUsersTable() {
+    if (!requireAdmin()) return;
+
+    const users = getUsers();
+
+    const search =
+        document.getElementById("userSearch")
+            .value.trim().toLowerCase();
+
+    const filtered = users.filter(user => {
+        const text = [
+            user.name,
+            user.username,
+            user.email,
+            user.phone,
+            user.country,
+            user.age,
+            user.gender
+        ].join(" ").toLowerCase();
+
+        return text.includes(search);
+    });
+
+    const table = document.getElementById("usersTable");
+    table.innerHTML = "";
+
+    if (!filtered.length) {
+        table.innerHTML = `
+            <tr>
+                <td colspan="8">No users found.</td>
+            </tr>
+        `;
+        return;
+    }
+
+    filtered.forEach(user => {
+        const row = document.createElement("tr");
+
+        const statusClass =
+            user.disabled ? "status-disabled" : "status-active";
+        const initials = String(user.name || user.username || "?").split(/\s+/).filter(Boolean).slice(0,2).map(x => x[0]).join("").toUpperCase();
+
+        const statusText =
+            user.disabled ? "Deactivated" : "Active";
+
+        row.innerHTML = `
+            <td><strong>${escapeHTML(user.name || "-")}</strong></td>
+            <td><strong>@${escapeHTML(user.username || "-")}</strong></td>
+            <td>${escapeHTML(user.email || "-")}</td>
+            <td><span class="role-pill">● ${user.role === "admin" ? "Administrator" : "Normal User"}</span></td>
+            <td>${escapeHTML(user.age || "-")}</td>
+            <td>
+                <span class="${statusClass}">
+                    ● ${statusText}
+                </span>
+            </td>
+            <td>${escapeHTML(formatDate(user.createdAt))}</td>
+            <td>
+                <div class="action-buttons">
+                    <button class="edit-btn"
+                            type="button"
+                            data-action="edit"
+                            data-id="${escapeHTML(user.id)}">
+                        Edit
+                    </button>
+
+                    <button class="${user.disabled ? "activate-btn" : "deactivate-btn"}"
+                            type="button"
+                            data-action="${user.disabled ? "activate" : "deactivate"}"
+                            data-id="${escapeHTML(user.id)}">
+                        ${user.disabled ? "Activate" : "Deactivate"}
+                    </button>
+
+                    <button class="delete-btn"
+                            type="button"
+                            data-action="delete"
+                            data-id="${escapeHTML(user.id)}">
+                        Delete
+                    </button>
+                </div>
+            </td>
+        `;
+
+        table.appendChild(row);
+    });
+}
+
+/* Event delegation makes user-management buttons reliable. */
+document.getElementById("usersTable")
+    .addEventListener("click", event => {
+        const button = event.target.closest("button[data-action]");
+
+        if (!button) return;
+
+        const id = button.dataset.id;
+        const action = button.dataset.action;
+
+        if (action === "edit") openEditUser(id);
+        if (action === "activate") activateUser(id);
+        if (action === "deactivate") deactivateUser(id);
+        if (action === "delete") deleteUser(id);
+});
+
+/* =========================================================
+   EDIT USER
+========================================================= */
+function openEditUser(userId) {
+    if (!requireAdmin()) return;
+
+    const user = getUsers().find(item => item.id === userId);
+
+    if (!user) {
+        alert("User not found.");
+        return;
+    }
+
+    document.getElementById("editUserId").value = user.id;
+    document.getElementById("editName").value = user.name || "";
+    document.getElementById("editUsername").value = user.username || "";
+    document.getElementById("editEmail").value = user.email || "";
+    document.getElementById("editPhone").value = user.phone || "";
+    document.getElementById("editAge").value = user.age || "";
+    document.getElementById("editDob").value = user.dob || "";
+    document.getElementById("editGender").value = user.gender || "";
+    document.getElementById("editCountry").value = user.country || "";
+    document.getElementById("editPassword").value = "";
+    document.getElementById("editNotifications").checked =
+        user.notifications !== false;
+
+    const modal = document.getElementById("editUserModal");
+    modal.classList.add("show");
+    modal.setAttribute("aria-hidden", "false");
+}
+
+function closeEditModal() {
+    const modal = document.getElementById("editUserModal");
+    modal.classList.remove("show");
+    modal.setAttribute("aria-hidden", "true");
+}
+
+document.getElementById("closeEditModal")
+    .addEventListener("click", closeEditModal);
+
+document.getElementById("editUserModal")
+    .addEventListener("click", event => {
+        if (event.target.id === "editUserModal") {
+            closeEditModal();
+        }
+    });
+
+document.addEventListener("keydown", event => {
+    if (event.key === "Escape") {
+        closeEditModal();
+    }
+});
+
+document.getElementById("editUserForm")
+    .addEventListener("submit", event => {
+        event.preventDefault();
+
+        if (!requireAdmin()) return;
+
+        const users = getUsers();
+
+        const userId =
+            document.getElementById("editUserId").value;
+
+        const index =
+            users.findIndex(user => user.id === userId);
+
+        if (index === -1) {
+            alert("User not found.");
+            return;
+        }
+
+        const user = users[index];
+
+        const username =
+            document.getElementById("editUsername").value.trim();
+
+        const email =
+            document.getElementById("editEmail").value
+                .trim().toLowerCase();
+
+        if (!username || !email) {
+            alert("Username and email are required.");
+            return;
+        }
+
+        if (usernameExists(username, user.id)) {
+            alert("That username is already in use.");
+            return;
+        }
+
+        if (emailExists(email, user.id)) {
+            alert("That email is already in use.");
+            return;
+        }
+
+        const newPassword =
+            document.getElementById("editPassword").value;
+
+        if (newPassword && newPassword.length < 6) {
+            alert("Password must contain at least 6 characters.");
+            return;
+        }
+
+        user.name =
+            document.getElementById("editName").value.trim();
+
+        user.username = username;
+        user.email = email;
+
+        user.phone =
+            document.getElementById("editPhone").value.trim();
+
+        user.age =
+            document.getElementById("editAge").value;
+
+        user.dob =
+            document.getElementById("editDob").value;
+
+        user.gender =
+            document.getElementById("editGender").value;
+
+        user.country =
+            document.getElementById("editCountry").value.trim();
+
+        user.notifications =
+            document.getElementById("editNotifications").checked;
+
+        if (newPassword) {
+            user.password = newPassword;
+        }
+
+        users[index] = user;
+        saveUsers(users);
+
+        addActivity(
+            "Edited user",
+            user.username,
+            currentUser
+        );
+
+        closeEditModal();
+        renderAdmin();
+
+        alert("User changes saved successfully.");
+    });
+
+/* =========================================================
+   ACTIVATE / DEACTIVATE / DELETE
+========================================================= */
+function activateUser(userId) {
+    if (!requireAdmin()) return;
+
+    const users = getUsers();
+    const user = users.find(item => item.id === userId);
+
+    if (!user) {
+        alert("User not found.");
+        return;
+    }
+
+    user.disabled = false;
+    saveUsers(users);
+
+    addActivity("Activated user", user.username, currentUser);
+
+    renderAdmin();
+    alert(`${user.username} has been activated.`);
+}
+
+function deactivateUser(userId) {
+    if (!requireAdmin()) return;
+
+    const users = getUsers();
+    const user = users.find(item => item.id === userId);
+
+    if (!user) {
+        alert("User not found.");
+        return;
+    }
+
+    if (!confirm(`Deactivate ${user.username}?`)) return;
+
+    user.disabled = true;
+    saveUsers(users);
+
+    addActivity("Deactivated user", user.username, currentUser);
+
+    renderAdmin();
+    alert(`${user.username} has been deactivated.`);
+}
+
+function deleteUser(userId) {
+    if (!requireAdmin()) return;
+
+    const users = getUsers();
+    const user = users.find(item => item.id === userId);
+
+    if (!user) {
+        alert("User not found.");
+        return;
+    }
+
+    if (!confirm(`Delete ${user.username}? This cannot be undone.`)) {
+        return;
+    }
+
+    saveUsers(users.filter(item => item.id !== userId));
+
+    addActivity("Deleted user", user.username, currentUser);
+
+    renderAdmin();
+    alert(`${user.username} has been deleted.`);
+}
+
+/* =========================================================
+   IMPORT USERS
+========================================================= */
+document.getElementById("importUsersInput")
+    .addEventListener("change", function () {
+        const file = this.files[0];
+
+        if (!file) return;
+
+        if (!file.name.toLowerCase().endsWith(".csv")) {
+            alert("Please select a CSV file.");
+            this.value = "";
+            return;
+        }
+
+        const reader = new FileReader();
+
+        reader.onload = event => {
+            try {
+                importUsersFromCSV(event.target.result);
+            } catch (error) {
+                console.error(error);
+                alert("Could not import the CSV file.");
+            }
+        };
+
+        reader.readAsText(file);
+        this.value = "";
+    });
+
+function parseCSV(text) {
+    const rows = [];
+    let row = [];
+    let cell = "";
+    let insideQuotes = false;
+
+    for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        const next = text[i + 1];
+
+        if (char === '"' && insideQuotes && next === '"') {
+            cell += '"';
+            i++;
+        } else if (char === '"') {
+            insideQuotes = !insideQuotes;
+        } else if (char === "," && !insideQuotes) {
+            row.push(cell.trim());
+            cell = "";
+        } else if ((char === "\n" || char === "\r") && !insideQuotes) {
+            if (char === "\r" && next === "\n") i++;
+
+            row.push(cell.trim());
+
+            if (row.some(value => value !== "")) {
+                rows.push(row);
+            }
+
+            row = [];
+            cell = "";
+        } else {
+            cell += char;
+        }
+    }
+
+    row.push(cell.trim());
+
+    if (row.some(value => value !== "")) {
+        rows.push(row);
+    }
+
+    return rows;
+}
+
+function importUsersFromCSV(text) {
+    if (!requireAdmin()) return;
+
+    const rows = parseCSV(text);
+
+    if (rows.length < 2) {
+        alert("The CSV file does not contain enough data.");
+        return;
+    }
+
+    const headers = rows[0].map(header =>
+        header.trim().toLowerCase()
+    );
+
+    const required = ["username", "email", "password"];
+
+    for (const field of required) {
+        if (!headers.includes(field)) {
+            alert(
+                `CSV must contain: ${required.join(", ")}`
+            );
+            return;
+        }
+    }
+
+    const users = getUsers();
+    const admin = getAdmin();
+
+    let imported = 0;
+    let skipped = 0;
+
+    for (let i = 1; i < rows.length; i++) {
+        const data = {};
+
+        headers.forEach((header, index) => {
+            data[header] = rows[i][index] || "";
+        });
+
+        const username =
+            String(data.username || "").trim();
+
+        const email =
+            String(data.email || "").trim().toLowerCase();
+
+        const password =
+            String(data.password || "");
+
+        if (!username || !email || password.length < 6) {
+            skipped++;
+            continue;
+        }
+
+        const duplicateUser = users.some(user =>
+            String(user.username || "").toLowerCase() ===
+                username.toLowerCase() ||
+            String(user.email || "").toLowerCase() === email
+        );
+
+        const duplicateAdmin =
+            String(admin.username || "").toLowerCase() ===
+                username.toLowerCase() ||
+            String(admin.email || "").toLowerCase() === email;
+
+        if (duplicateUser || duplicateAdmin) {
+            skipped++;
+            continue;
+        }
+
+        const status =
+            String(data.status || "").trim().toLowerCase();
+
+        const disabled =
+            status === "disabled" ||
+            status === "inactive" ||
+            status === "deactivated";
+
+        users.push({
+            id: generateId(),
+            role: "user",
+            name: String(data.name || username).trim(),
+            username,
+            email,
+            password,
+            phone: String(data.phone || "").trim(),
+            age: String(data.age || "").trim(),
+            dob: String(data.dob || "").trim(),
+            gender: String(data.gender || "").trim(),
+            country: String(data.country || "").trim(),
+            disabled,
+            notifications: true,
+            keepActivity: true,
+            profilePicture: "",
+            createdAt: new Date().toISOString()
+        });
+
+        imported++;
+    }
+
+    saveUsers(users);
+
+    addActivity(
+        `Imported ${imported} user(s); skipped ${skipped}`,
+        "CSV import",
+        currentUser
+    );
+
+    renderAdmin();
+
+    alert(
+        `Import complete.\n\nImported: ${imported}\nSkipped: ${skipped}`
+    );
+}
+
+/* =========================================================
+   EXPORT USERS
+   Passwords are deliberately NOT exported.
+========================================================= */
+document.getElementById("exportUsersBtn")
+    .addEventListener("click", exportUsers);
+
+function csvEscape(value) {
+    const text = String(value ?? "");
+
+    if (
+        text.includes(",") ||
+        text.includes('"') ||
+        text.includes("\n")
+    ) {
+        return '"' + text.replaceAll('"', '""') + '"';
+    }
+
+    return text;
+}
+
+function exportUsers() {
+    if (!requireAdmin()) return;
+
+    const users = getUsers();
+
+    const headers = [
+        "name",
+        "username",
+        "email",
+        "phone",
+        "age",
+        "dob",
+        "gender",
+        "country",
+        "status",
+        "createdAt"
+    ];
+
+    const lines = [headers.join(",")];
+
+    users.forEach(user => {
+        lines.push(
+            headers.map(header => {
+                let value = user[header];
+
+                if (header === "status") {
+                    value = user.disabled ? "disabled" : "active";
+                }
+
+                return csvEscape(value);
+            }).join(",")
+        );
+    });
+
+    const blob = new Blob(
+        [lines.join("\n")],
+        { type: "text/csv;charset=utf-8;" }
+    );
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = "users-export.csv";
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    URL.revokeObjectURL(url);
+
+    addActivity(
+        "Exported users",
+        `${users.length} users`,
+        currentUser
+    );
+
+    renderAdmin();
+}
+
+/* =========================================================
+   ADMIN PROFILE
+   Everything remains inside the single Admin section.
+========================================================= */
+document.getElementById("adminProfileForm")
+    .addEventListener("submit", event => {
+        event.preventDefault();
+
+        if (!requireAdmin()) return;
+
+        const username =
+            document.getElementById("adminUsername").value.trim();
+
+        const email =
+            document.getElementById("adminEmail").value
+                .trim().toLowerCase();
+
+        const users = getUsers();
+
+        const usernameTaken = users.some(user =>
+            String(user.username || "").toLowerCase() ===
+            username.toLowerCase()
+        );
+
+        const emailTaken = users.some(user =>
+            String(user.email || "").toLowerCase() === email
+        );
+
+        const currentAdmin = getAdmin();
+
+        if (
+            usernameTaken &&
+            username.toLowerCase() !==
+                String(currentAdmin.username || "").toLowerCase()
+        ) {
+            alert("That username is already used by a normal user.");
+            return;
+        }
+
+        if (
+            emailTaken &&
+            email !== String(currentAdmin.email || "").toLowerCase()
+        ) {
+            alert("That email is already used by a normal user.");
+            return;
+        }
+
+        currentUser.name =
+            document.getElementById("adminName").value.trim();
+
+        currentUser.username = username;
+        currentUser.email = email;
+
+        currentUser.phone =
+            document.getElementById("adminPhone").value.trim();
+
+        currentUser.age =
+            document.getElementById("adminAge").value;
+
+        currentUser.dob =
+            document.getElementById("adminDob").value;
+
+        currentUser.gender =
+            document.getElementById("adminGender").value;
+
+        currentUser.country =
+            document.getElementById("adminCountry").value.trim();
+
+        saveAdmin(currentUser);
+
+        addActivity(
+            "Updated admin profile",
+            currentUser.username,
+            currentUser
+        );
+
+        loadDashboard();
+        renderAdmin();
+
+        alert("Admin profile saved successfully.");
+    });
+
+/* =========================================================
+   ADMIN PASSWORD
+========================================================= */
+document.getElementById("adminPasswordForm")
+    .addEventListener("submit", event => {
+        event.preventDefault();
+
+        if (!requireAdmin()) return;
+
+        const currentPassword =
+            document.getElementById("adminCurrentPassword").value;
+
+        const newPassword =
+            document.getElementById("adminNewPassword").value;
+
+        const confirmPassword =
+            document.getElementById("adminConfirmPassword").value;
+
+        if (currentPassword !== currentUser.password) {
+            alert("Current admin password is incorrect.");
+            return;
+        }
+
+        if (newPassword.length < 6) {
+            alert("New password must contain at least 6 characters.");
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            alert("Passwords do not match.");
+            return;
+        }
+
+        currentUser.password = newPassword;
+        saveAdmin(currentUser);
+
+        addActivity(
+            "Changed admin password",
+            "",
+            currentUser
+        );
+
+        event.target.reset();
+
+        alert("Admin password saved successfully.");
+    });
+
+/* =========================================================
+   ACTIVITY
+========================================================= */
+function renderActivity() {
+    const activities = readJSON(ACTIVITY_KEY, []);
+
+    let filtered = [];
+
+    if (currentUser.role === "admin") {
+        filtered = Array.isArray(activities) ? activities : [];
+    } else {
+        filtered = (Array.isArray(activities) ? activities : [])
+            .filter(activity =>
+                activity.actorId === currentUser.id
+            );
+    }
+
+    const table = document.getElementById("activityTable");
+    table.innerHTML = "";
+
+    if (!filtered.length) {
+        table.innerHTML = `
+            <tr>
+                <td colspan="4">No activity yet.</td>
+            </tr>
+        `;
+        return;
+    }
+
+    filtered.forEach(activity => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${escapeHTML(formatDate(activity.date))}</td>
+            <td>${escapeHTML(activity.action)}</td>
+            <td>${escapeHTML(activity.target)}</td>
+            <td>${escapeHTML(activity.actorName)}</td>
+        `;
+
+        table.appendChild(row);
+    });
+}
+
+document.getElementById("activitySearch")
+    .addEventListener("input", renderSystemActivity);
+
+function renderSystemActivity() {
+    if (!requireAdmin()) return;
+
+    const activities = readJSON(ACTIVITY_KEY, []);
+
+    const search =
+        document.getElementById("activitySearch")
+            .value.trim().toLowerCase();
+
+    const filtered =
+        (Array.isArray(activities) ? activities : [])
+            .filter(activity => {
+                const text = [
+                    activity.actorName,
+                    activity.actorRole,
+                    activity.action,
+                    activity.target
+                ].join(" ").toLowerCase();
+
+                return text.includes(search);
+            });
+
+    const table =
+        document.getElementById("systemActivityTable");
+
+    table.innerHTML = "";
+
+    if (!filtered.length) {
+        table.innerHTML = `
+            <tr>
+                <td colspan="5">No activity found.</td>
+            </tr>
+        `;
+        return;
+    }
+
+    filtered.forEach(activity => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${escapeHTML(formatDate(activity.date))}</td>
+            <td>${escapeHTML(activity.actorName)}</td>
+            <td>${escapeHTML(activity.actorRole)}</td>
+            <td>${escapeHTML(activity.action)}</td>
+            <td>${escapeHTML(activity.target)}</td>
+        `;
+
+        table.appendChild(row);
+    });
+}
+
+
+/* =========================
+   ADMIN ADD USER
+========================= */
+function openAddUserModal() {
+    if (currentUser.role !== "admin") return;
+    const modal = document.getElementById("addUserModal");
+    modal.classList.add("show");
+    modal.setAttribute("aria-hidden", "false");
+}
+
+function closeAddUserModal() {
+    const modal = document.getElementById("addUserModal");
+    modal.classList.remove("show");
+    modal.setAttribute("aria-hidden", "true");
+}
+
+document.getElementById("addUserBtn")?.addEventListener("click", openAddUserModal);
+document.getElementById("closeAddUserModal")?.addEventListener("click", closeAddUserModal);
+
+async function createUserAsAdmin(event) {
+    event.preventDefault();
+    if (currentUser.role !== "admin") return;
+
+    const username = document.getElementById("addUsername").value.trim();
+    const email = document.getElementById("addEmail").value.trim().toLowerCase();
+    const password = document.getElementById("addPassword").value;
+
+    if (usernameExists(username) || emailExists(email)) {
+        alert("That username or email is already in use.");
+        return;
+    }
+
+    if (password.length < 6) {
+        alert("Password must contain at least 6 characters.");
+        return;
+    }
+
+    const user = {
+        id: generateId(),
+        role: "user",
+        name: document.getElementById("addName").value.trim() || username,
+        username, email, password,
+        phone: document.getElementById("addPhone").value.trim(),
+        age: document.getElementById("addAge").value,
+        dob: document.getElementById("addDob").value,
+        gender: document.getElementById("addGender").value,
+        country: document.getElementById("addCountry").value.trim(),
+        disabled: false,
+        notifications: true,
+        keepActivity: true,
+        profilePicture: "",
+        createdAt: new Date().toISOString()
+    };
+
+    try {
+        const response = await fetch(`${API_BASE}/admin/users`, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({adminId: currentUser.id, user})
+        });
+
+        if (!response.ok) throw new Error();
+        const data = await response.json();
+
+        if (Array.isArray(data.users)) {
+            localStorage.setItem(USERS_KEY, JSON.stringify(data.users));
+        }
+    } catch {
+        const users = getUsers();
+        users.push(user);
+        saveUsers(users);
+    }
+
+    addActivity("Added user", user.username, currentUser);
+    document.getElementById("addUserForm").reset();
+    closeAddUserModal();
+    renderAdmin();
+    alert("User added successfully.");
+}
+
+document.getElementById("addUserForm")?.addEventListener("submit", createUserAsAdmin);
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+document.getElementById("logoutBtn")
+    .addEventListener("click", () => {
+        if (currentUser) {
+            addActivity("Logged out", "", currentUser);
+        }
+
+        localStorage.removeItem(SESSION_KEY);
+        localStorage.removeItem("loggedIn");
+        localStorage.removeItem("currentUserId");
+        localStorage.removeItem("currentUserRole");
+
+        window.location.href = "index.html";
+    });
+
+
+/* Shared server synchronization */
+
+async function syncUsersFromServer() {
+    try {
+        const response = await fetch(`${API_BASE}/users`);
+        if (!response.ok) return;
+        const data = await response.json();
+        if (Array.isArray(data.users)) {
+            localStorage.setItem(USERS_KEY, JSON.stringify(data.users));
+        }
+    } catch {}
+}
+
+async function pushUsersToServer(users) {
+    try {
+        await fetch(`${API_BASE}/users`, {
+            method: "PUT",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({users})
+        });
+    } catch {}
+}
+
+async function pushAdminToServer(admin) {
+    try {
+        await fetch(`${API_BASE}/admin`, {
+            method: "PUT",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({admin})
+        });
+    } catch {}
+}
+
+/* =========================================================
+   START
+========================================================= */
+(async function startDashboard() {
+    await syncUsersFromServer();
+    const ready = await initializeCurrentUser();
+    if (ready) loadDashboard();
+})();
+</script>
+<datalist id="countrySuggestions"><option value="Afghanistan"><option value="Albania"><option value="Algeria"><option value="Andorra"><option value="Angola"><option value="Antigua and Barbuda"><option value="Argentina"><option value="Armenia"><option value="Australia"><option value="Austria"><option value="Azerbaijan"><option value="Bahamas"><option value="Bahrain"><option value="Bangladesh"><option value="Barbados"><option value="Belarus"><option value="Belgium"><option value="Belize"><option value="Benin"><option value="Bhutan"><option value="Bolivia"><option value="Bosnia and Herzegovina"><option value="Botswana"><option value="Brazil"><option value="Brunei"><option value="Bulgaria"><option value="Burkina Faso"><option value="Burundi"><option value="Cabo Verde"><option value="Cambodia"><option value="Cameroon"><option value="Canada"><option value="Central African Republic"><option value="Chad"><option value="Chile"><option value="China"><option value="Colombia"><option value="Comoros"><option value="Congo (Republic of the)"><option value="Costa Rica"><option value="Côte d’Ivoire"><option value="Croatia"><option value="Cuba"><option value="Cyprus"><option value="Czechia"><option value="Democratic Republic of the Congo"><option value="Denmark"><option value="Djibouti"><option value="Dominica"><option value="Dominican Republic"><option value="Ecuador"><option value="Egypt"><option value="El Salvador"><option value="Equatorial Guinea"><option value="Eritrea"><option value="Estonia"><option value="Eswatini"><option value="Ethiopia"><option value="Fiji"><option value="Finland"><option value="France"><option value="Gabon"><option value="Gambia"><option value="Georgia"><option value="Germany"><option value="Ghana"><option value="Greece"><option value="Grenada"><option value="Guatemala"><option value="Guinea"><option value="Guinea-Bissau"><option value="Guyana"><option value="Haiti"><option value="Honduras"><option value="Hungary"><option value="Iceland"><option value="India"><option value="Indonesia"><option value="Iran"><option value="Iraq"><option value="Ireland"><option value="Israel"><option value="Italy"><option value="Jamaica"><option value="Japan"><option value="Jordan"><option value="Kazakhstan"><option value="Kenya"><option value="Kiribati"><option value="Kuwait"><option value="Kyrgyzstan"><option value="Laos"><option value="Latvia"><option value="Lebanon"><option value="Lesotho"><option value="Liberia"><option value="Libya"><option value="Liechtenstein"><option value="Lithuania"><option value="Luxembourg"><option value="Madagascar"><option value="Malawi"><option value="Malaysia"><option value="Maldives"><option value="Mali"><option value="Malta"><option value="Marshall Islands"><option value="Mauritania"><option value="Mauritius"><option value="Mexico"><option value="Micronesia"><option value="Moldova"><option value="Monaco"><option value="Mongolia"><option value="Montenegro"><option value="Morocco"><option value="Mozambique"><option value="Myanmar"><option value="Namibia"><option value="Nauru"><option value="Nepal"><option value="Netherlands"><option value="New Zealand"><option value="Nicaragua"><option value="Niger"><option value="Nigeria"><option value="North Korea"><option value="North Macedonia"><option value="Norway"><option value="Oman"><option value="Pakistan"><option value="Palau"><option value="Palestine"><option value="Panama"><option value="Papua New Guinea"><option value="Paraguay"><option value="Peru"><option value="Philippines"><option value="Poland"><option value="Portugal"><option value="Qatar"><option value="Romania"><option value="Russia"><option value="Rwanda"><option value="Saint Kitts and Nevis"><option value="Saint Lucia"><option value="Saint Vincent and the Grenadines"><option value="Samoa"><option value="San Marino"><option value="Sao Tome and Principe"><option value="Saudi Arabia"><option value="Senegal"><option value="Serbia"><option value="Seychelles"><option value="Sierra Leone"><option value="Singapore"><option value="Slovakia"><option value="Slovenia"><option value="Solomon Islands"><option value="Somalia"><option value="South Africa"><option value="South Korea"><option value="South Sudan"><option value="Spain"><option value="Sri Lanka"><option value="Sudan"><option value="Suriname"><option value="Sweden"><option value="Switzerland"><option value="Syria"><option value="Taiwan"><option value="Tajikistan"><option value="Tanzania"><option value="Thailand"><option value="Timor-Leste"><option value="Togo"><option value="Tonga"><option value="Trinidad and Tobago"><option value="Tunisia"><option value="Türkiye"><option value="Turkmenistan"><option value="Tuvalu"><option value="Uganda"><option value="Ukraine"><option value="United Arab Emirates"><option value="United Kingdom"><option value="United States"><option value="Uruguay"><option value="Uzbekistan"><option value="Vanuatu"><option value="Vatican City"><option value="Venezuela"><option value="Vietnam"><option value="Yemen"><option value="Zambia"><option value="Zimbabwe"></datalist>
+</body>
+</html>

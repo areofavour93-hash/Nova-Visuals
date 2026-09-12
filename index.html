@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Login</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="auth-page">
+
+    <div class="auth-box">
+
+        <div class="auth-content">
+
+            <img
+                src="logo.png"
+                alt="Logo"
+                class="logo"
+            >
+
+            <h1>Welcome Back</h1>
+
+            <p class="auth-subtitle">
+                Login to continue to your account
+            </p>
+
+            <div id="loginAlert" class="alert alert-error"></div>
+
+            <form id="loginForm">
+
+                <!-- USER TYPE -->
+
+                <div class="user-type-title">
+                    Login as
+                </div>
+
+                <div class="user-type-selector">
+
+                    <div class="user-type-option">
+
+                        <input
+                            type="checkbox"
+                            id="normalUser"
+                            name="loginType"
+                            value="user"
+                            checked
+                        >
+
+                        <label
+                            for="normalUser"
+                            class="user-type-label"
+                        >
+
+                            <span class="user-type-icon">
+                                👤
+                            </span>
+
+                            <span class="user-type-text">
+                                <strong>Normal User</strong>
+                                <small>Personal account</small>
+                            </span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="user-type-option">
+
+                        <input
+                            type="checkbox"
+                            id="adminUser"
+                            name="loginType"
+                            value="admin"
+                        >
+
+                        <label
+                            for="adminUser"
+                            class="user-type-label"
+                        >
+
+                            <span class="user-type-icon">
+                                ⚙
+                            </span>
+
+                            <span class="user-type-text">
+                                <strong>Administrator</strong>
+                                <small>Management account</small>
+                            </span>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- USERNAME / EMAIL -->
+
+                <div class="form-group">
+
+                    <label for="identifier">
+                        Username or Email
+                    </label>
+
+                    <input
+                        type="text"
+                        id="identifier"
+                        name="username"
+                        placeholder="Enter username or email"
+                        autocomplete="username"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <div class="password-wrapper">
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Enter password"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="password-eye"
+                            id="togglePassword"
+                            aria-label="Show password"
+                        >
+                            👁
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="btn"
+                >
+                    Login
+                </button>
+
+            </form>
+
+
+            <div class="auth-links">
+
+                <a href="forgot-password.html">
+                    Forgot Password?
+                </a>
+
+                <span class="separator">|</span>
+
+                <a href="register.html">
+                    Create Account
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const USERS_KEY = "app_users_v2";
+const ADMIN_KEY = "app_admin_v2";
+const SESSION_KEY = "app_session_v2";
+const ACTIVITY_KEY = "app_activity_v2";
+
+
+/* =========================
+   STORAGE
+========================= */
+
+function getUsers() {
+
+    try {
+
+        const users =
+            JSON.parse(
+                localStorage.getItem(USERS_KEY)
+            );
+
+        return Array.isArray(users)
+            ? users
+            : [];
+
+    } catch {
+
+        return [];
+
+    }
+}
+
+
+function saveUsers(users) {
+
+    localStorage.setItem(
+        USERS_KEY,
+        JSON.stringify(users)
+    );
+
+}
+
+
+function getAdmin() {
+
+    try {
+
+        const admin =
+            JSON.parse(
+                localStorage.getItem(ADMIN_KEY)
+            );
+
+        if (admin && typeof admin === "object") {
+            return admin;
+        }
+
+    } catch {}
+
+    const defaultAdmin = {
+
+        id: "admin",
+
+        name: "Administrator",
+
+        username: "admin",
+
+        email: "admin@mywebsite.com",
+
+        password: "Admin12345",
+
+        role: "admin",
+
+        disabled: false
+
+    };
+
+    localStorage.setItem(
+        ADMIN_KEY,
+        JSON.stringify(defaultAdmin)
+    );
+
+    return defaultAdmin;
+}
+
+
+/* =========================
+   CLEAN OLD USER DATA
+========================= */
+
+function prepareUsers() {
+
+    let users = getUsers();
+
+    let changed = false;
+
+    users = users.map((user, index) => {
+
+        if (!user.id) {
+
+            user.id =
+                "user_" +
+                Date.now() +
+                "_" +
+                index;
+
+            changed = true;
+        }
+
+        user.role = "user";
+
+        if (typeof user.disabled !== "boolean") {
+
+            user.disabled = false;
+
+            changed = true;
+        }
+
+        if (typeof user.notifications !== "boolean") {
+
+            user.notifications = true;
+
+            changed = true;
+        }
+
+        return user;
+
+    });
+
+    if (changed) {
+        saveUsers(users);
+    }
+
+    return users;
+}
+
+
+/* =========================
+   ACTIVITY
+========================= */
+
+function addActivity(
+    action,
+    target,
+    actor
+) {
+
+    let activities = [];
+
+    try {
+
+        activities =
+            JSON.parse(
+                localStorage.getItem(ACTIVITY_KEY)
+            ) || [];
+
+    } catch {
+
+        activities = [];
+
+    }
+
+    activities.unshift({
+
+        id:
+            Date.now() +
+            "_" +
+            Math.random()
+                .toString(36)
+                .substring(2),
+
+        action: action,
+
+        target: target,
+
+        actorId: actor.id,
+
+        actorRole: actor.role,
+
+        actorUsername:
+            actor.username || "",
+
+        actorEmail:
+            actor.email || "",
+
+        date:
+            new Date().toISOString()
+
+    });
+
+    activities =
+        activities.slice(0, 1000);
+
+    localStorage.setItem(
+        ACTIVITY_KEY,
+        JSON.stringify(activities)
+    );
+
+}
+
+
+/* =========================
+   LOGIN TYPE
+========================= */
+
+const normalUser =
+    document.getElementById("normalUser");
+
+const adminUser =
+    document.getElementById("adminUser");
+
+
+normalUser.addEventListener(
+    "change",
+    function () {
+
+        if (this.checked) {
+            adminUser.checked = false;
+        }
+
+        if (
+            !this.checked &&
+            !adminUser.checked
+        ) {
+            this.checked = true;
+        }
+
+    }
+);
+
+
+adminUser.addEventListener(
+    "change",
+    function () {
+
+        if (this.checked) {
+            normalUser.checked = false;
+        }
+
+        if (
+            !this.checked &&
+            !normalUser.checked
+        ) {
+            this.checked = true;
+        }
+
+    }
+);
+
+
+/* =========================
+   PASSWORD SHOW / HIDE
+========================= */
+
+document
+    .getElementById("togglePassword")
+    .addEventListener(
+        "click",
+        function () {
+
+            const password =
+                document.getElementById("password");
+
+            if (
+                password.type === "password"
+            ) {
+
+                password.type = "text";
+
+                this.textContent = "🙈";
+
+            } else {
+
+                password.type = "password";
+
+                this.textContent = "👁";
+
+            }
+
+        }
+    );
+
+
+
+/* Shared account server. The localStorage fallback keeps the original demo
+   behavior working when the site is opened without the server. */
+const API_BASE = window.location.protocol === "file:" ? "http://localhost:3000/api" : "/api";
+
+async function sharedLogin(identifier, password, role) {
+    try {
+        const response = await fetch(`${API_BASE}/login`, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({identifier, password, role})
+        });
+        if (!response.ok) return null;
+        return await response.json();
+    } catch {
+        return null;
+    }
+}
+
+/* =========================
+   LOGIN
+========================= */
+
+document
+    .getElementById("loginForm")
+    .addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const identifier = document.getElementById("identifier").value.trim().toLowerCase();
+        const password = document.getElementById("password").value;
+        const alertBox = document.getElementById("loginAlert");
+
+        alertBox.classList.remove("show");
+
+        const selectedType = adminUser.checked ? "admin" : "user";
+
+        /* Try the shared server first so accounts work across devices. */
+        const shared = await sharedLogin(identifier, password, selectedType);
+
+        if (shared && shared.success) {
+            localStorage.setItem(SESSION_KEY, JSON.stringify({
+                loggedIn: true,
+                id: shared.account.id,
+                role: shared.account.role,
+                loginTime: new Date().toISOString()
+            }));
+            localStorage.setItem("loggedIn", "true");
+            localStorage.setItem("currentUserId", shared.account.id);
+            localStorage.setItem("currentUserRole", shared.account.role);
+            window.location.href = "dashboard.html";
+            return;
+        }
+
+        /* Original localStorage login fallback. */
+        if (selectedType === "admin") {
+            const admin = getAdmin();
+            const matches =
+                String(admin.username || "").toLowerCase() === identifier ||
+                String(admin.email || "").toLowerCase() === identifier;
+
+            if (matches && admin.password === password && !admin.disabled) {
+                localStorage.setItem(SESSION_KEY, JSON.stringify({
+                    loggedIn: true,
+                    id: admin.id,
+                    role: "admin",
+                    loginTime: new Date().toISOString()
+                }));
+                localStorage.setItem("loggedIn", "true");
+                localStorage.setItem("currentUserId", "admin");
+                localStorage.setItem("currentUserRole", "admin");
+                addActivity("Logged in", "Administrator account", admin);
+                window.location.href = "dashboard.html";
+                return;
+            }
+
+            alertBox.textContent = "Invalid administrator username/email or password.";
+            alertBox.classList.add("show");
+            return;
+        }
+
+        const users = prepareUsers();
+        const user = users.find(item => {
+            const username = String(item.username || "").toLowerCase();
+            const email = String(item.email || "").toLowerCase();
+            return username === identifier || email === identifier;
+        });
+
+        if (!user) {
+            alertBox.textContent = "No normal user account was found with those details.";
+            alertBox.classList.add("show");
+            return;
+        }
+
+        if (user.disabled) {
+            alertBox.textContent = "This account has been deactivated.";
+            alertBox.classList.add("show");
+            return;
+        }
+
+        if (user.password !== password) {
+            alertBox.textContent = "Incorrect password.";
+            alertBox.classList.add("show");
+            return;
+        }
+
+        localStorage.setItem(SESSION_KEY, JSON.stringify({
+            loggedIn: true,
+            id: user.id,
+            role: "user",
+            loginTime: new Date().toISOString()
+        }));
+        localStorage.setItem("loggedIn", "true");
+        localStorage.setItem("currentUserId", user.id);
+        localStorage.setItem("currentUserRole", "user");
+        addActivity("Logged in", "Normal user account", user);
+        window.location.href = "dashboard.html";
+    });
+</script>
+
+</body>
+</html>

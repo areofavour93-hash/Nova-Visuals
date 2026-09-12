@@ -1,0 +1,12 @@
+{
+  "admin": {
+    "id": "admin",
+    "role": "admin",
+    "name": "Administrator",
+    "username": "admin",
+    "email": "admin@mywebsite.com",
+    "password": "Admin12345",
+    "disabled": false
+  },
+  "users": []
+}
